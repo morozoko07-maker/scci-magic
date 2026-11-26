@@ -212,7 +212,7 @@ def safe_accent(value: str) -> str:
     return value if re.fullmatch(r"#[0-9a-fA-F]{6}", value or "") else "#8fa68e"
 
 
-THEMES = [("rose", "Rose"), ("paper", "Paper"), ("tomato", "Tomato"), ("butter", "Butter"), ("blush", "Blush")]
+THEMES = [("rose", "Rose"), ("paper", "Paper"), ("tomato", "Tomato"), ("butter", "Butter"), ("blush", "Blush"), ("garden", "Garden")]
 
 THEME_BUTTONS = (
     '<div class="themes" role="group" aria-label="Colour theme">'
@@ -242,7 +242,7 @@ def layout(title: str, body: str, active: str = "", description: str = "") -> st
 <meta name="theme-color" content="#000000">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=Libre+Caslon+Display&display=swap" rel="stylesheet">
 <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/static/style.css">
 <script>

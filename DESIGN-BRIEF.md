@@ -4,15 +4,13 @@ Living document for anyone — human or AI — designing for SCCI Magic. It reco
 as it exists and the direction new work must follow. Update the token tables when
 `static/style.css` changes.
 
-Stack: Python 3 standard library, SQLite, server-rendered HTML, one stylesheet, small
-vanilla JS. No build step, no framework, no accounts, no tracking. Routes live in `SPEC.md`;
-templates are f-strings in `app.py`.
+Stack: Python 3 stdlib, SQLite, server-rendered HTML, one stylesheet, small vanilla JS. No
+build step, framework, accounts or tracking. Routes in `SPEC.md`; templates in `app.py`.
 
 ## 1. The brief
 
-**Product.** A self-hostable student club portal. Clubs register without an account, get a
-private manage link, customise a page and publish events. Students browse, read one
-calendar, RSVP and apply. An administrator approves clubs before they go live.
+**Product.** A self-hostable club portal. Clubs register, get a private manage link, customise
+a page and publish events. Students browse one calendar, RSVP and apply; an admin approves.
 
 **Audience.** Students aged 17–24, scanning on a phone between lectures; club committees of
 one or two unpaid people; a department administrator who wants few surprises.
@@ -29,17 +27,15 @@ student. Sentence case, short sentences, British English. No exclamation marks, 
 “unleash”, “elevate”, “seamless”, no rhetorical questions. Numbers only from the database.
 
 **Success.** A first-time visitor can name three clubs and one event after five seconds. The
-paths home → club → apply and home → event → RSVP have no dead end and no account wall. A
-club page can be created and published by keyboard alone. Every page works with JavaScript
-off. All five palettes feel like one product. No layout shift from video; no horizontal
-scroll at 360px.
+paths home → club → apply and home → event → RSVP have no dead end. A club page can be
+created by keyboard alone. Every page works without JS. All five palettes feel like one
+product. No layout shift from video; no horizontal scroll at 360px.
 
-**Avoid.** Violet or purple as a brand colour. Glassmorphism, frosted panels, backdrop blur.
-Gradients, including “subtle” mesh and glow. Emoji as icons or decoration. Invented
-statistics, testimonials, member counts, logos or “trusted by” rows. Stock copy
-(“empowering the next generation of leaders”). Rounded blobs, pill-shaped cards, large soft
-shadows, floating action buttons. Carousels that hide content. Icons where a word is clearer.
-Animation that delays reading.
+**Avoid.** Violet or purple. Glassmorphism, frosted panels, backdrop blur. Gradients of any
+kind. Emoji. Invented statistics, testimonials, member counts, logos or “trusted by” rows.
+Stock copy (“empowering the next generation of leaders”). Rounded blobs, pill cards, soft
+shadows. Carousels that hide content. Icons where a word is clearer. Animation that delays
+reading.
 
 **Direction.** `ascii-magic.com/landing`: near-black ground, white type, 1px borders, square
 corners, mono labels, very large display headings, ASCII and dithered imagery, long
@@ -50,20 +46,18 @@ marquees, short hover transitions. Restraint is the style; one loud element per 
 ### Colour tokens
 
 Five palettes are the public system. `html[data-theme]` selects one; JS also accepts
-`?theme=` and stores the choice under `portal-theme`. Defined in `style.css` lines 545–575.
-Legacy `dark`/`light`/`midnight` tokens still exist; do not extend them.
+`?theme=` and stores the choice under `portal-theme`. Defined in `style.css` lines 545–575;
+legacy `dark`/`light`/`midnight` tokens still exist but must not be extended.
 
 | Token | Variable | Role | Rule |
 |---|---|---|---|
 | bg | `--bg` | Page ground | Palette-defining; full-bleed. |
 | ink | `--ink` | Body and headings | 4.5:1 minimum on bg. |
 | muted | `--muted` | Secondary text, meta | Small text still needs 4.5:1. |
-| accent | `--accent` | CTA fill, links, focus | See contrast debts. |
-| accent ink | `--accent-ink` | Text on accent fill | Pair only with accent. |
+| accent | `--accent` | CTA fill, links, focus | `--accent-ink` is text on the fill. |
 | flower | `--flower` | Garden petals | Decorative, never the only signal. |
 | stem | `--accent-2` | Garden stems, secondary detail | Decorative; not a UI state. |
-| border | `--border` / `--line` (legacy) | 1px hairlines | Exactly 1px. |
-| strong | `--strong` / `--line-strong` | Input and hover borders | One step louder than border. |
+| border | `--border` / `--line` (legacy) | 1px hairlines; `--strong` for inputs | Exactly 1px. |
 | surface | `--surface`, `--panel` | Cards, panels, wells | One step from bg, never a gradient. |
 | radius | `--radius` | Corners | 5px legacy default; 0 is the target for new work. |
 
@@ -123,8 +117,7 @@ Class names are public API. Keep them and the `data-*` hooks that `app.js` uses.
 
 ### Nav
 ```html
-<header class="bar">
-  <a class="brand" href="/"><span class="mark">SM</span>SCCI Magic</a>
+<header class="bar"><a class="brand" href="/"><span class="mark">SM</span>SCCI Magic</a>
   <nav class="nav" aria-label="Primary"><a class="navlink is-active" href="/" aria-current="page">Home</a>…</nav>
   <div class="themes" role="group" aria-label="Colour theme">…</div>
 </header>
@@ -149,8 +142,7 @@ Exactly five: rose, paper, tomato, butter, blush. JS owns `aria-pressed`, `<html
     <div class="hero-actions"><a class="btn" href="/clubs">Browse clubs</a></div>
     <div class="stats"><div><strong>12</strong><span>clubs</span></div></div>
   </div>
-  <div class="ascii-stage"><video class="stage-video" data-clip="events" data-motion="grow" muted
-    loop playsinline autoplay preload="metadata" aria-hidden="true" poster="/static/media/poster-events-rose.webp"></video>
+  <div class="ascii-stage"><video class="stage-video" data-clip="events" data-motion="grow" muted loop playsinline autoplay preload="metadata" aria-hidden="true" poster="/static/media/poster-events-rose.webp"></video>
     <span class="stage-tag">EVENTS · LIVE</span><span class="stage-idx">SM/01</span></div>
 </section>
 ```
@@ -189,8 +181,7 @@ drives the filter and must match the category. Hover lifts 2px and changes borde
 ### Event row
 ```html
 <a class="event-row" href="/e/42" data-kind="workshop" style="--club-accent:#FF1400">
-  <span class="date-block"><strong>14</strong><span>MAR</span></span>
-  <span class="event-body">
+  <span class="date-block"><strong>14</strong><span>MAR</span></span><span class="event-body">
     <span class="event-top"><span class="badge kind-workshop">workshop</span><span class="mono muted">Thu 14 Mar · 18:00</span></span>
     <strong>Intro to soldering</strong><span class="muted">Lab 2 · Robotics Club</span>
   </span>
@@ -204,8 +195,7 @@ one of hackathon, talk, workshop, interview, meetup, sports, cultural.
 <a class="panel" href="/e/42" style="--club-accent:#FF1400">
   <img class="panel-img" src="/media/cover.jpg" alt="" loading="lazy">
   <canvas class="panel-canvas" data-shader data-src="/media/cover.jpg" data-seed="42" data-accent="#FF1400"></canvas>
-  <span class="panel-body"><span class="badge kind-workshop">workshop</span>
-    <strong class="panel-title">Intro to soldering</strong>
+  <span class="panel-body"><span class="badge kind-workshop">workshop</span><strong class="panel-title">Intro to soldering</strong>
     <span class="panel-meta mono">Thu 14 Mar · 18:00</span><span class="panel-club">Robotics Club</span></span>
 </a>
 ```
@@ -215,11 +205,9 @@ accent, not a placeholder illustration. Canvas is decorative; img is the fallbac
 ### Calendar
 ```html
 <section class="cal card">
-  <div class="cal-head">
-    <a class="btn btn-ghost" href="/events?m=2026-02" aria-label="Previous month">←</a>
+  <div class="cal-head"><a class="btn btn-ghost" href="/events?m=2026-02" aria-label="Previous month">←</a>
     <strong>March 2026</strong>
-    <a class="btn btn-ghost" href="/events?m=2026-04" aria-label="Next month">→</a>
-  </div>
+    <a class="btn btn-ghost" href="/events?m=2026-04" aria-label="Next month">→</a></div>
   <div class="cal-week"><span>Mon</span>…<span>Sun</span></div>
   <div class="cal-grid"><div class="cal-day has-event" data-date="2026-03-14">
     <span class="dnum">14</span><a class="ev" href="/e/42">Intro to soldering</a></div></div>
@@ -274,8 +262,7 @@ newsletter form. Keep the non-affiliation and privacy lines.
 
 ## 4. Five ready-to-paste prompts
 
-Replace every `<PLACEHOLDER>`; keep the constraints. Each prompt is self-contained and
-assumes the repository at `/home/miz/Projects/clubportal`.
+Replace each `<PLACEHOLDER>`; keep constraints. Every prompt assumes `/home/miz/Projects/clubportal`.
 
 ### a. Redesign a page section
 ```text
@@ -284,15 +271,12 @@ stylesheet (static/style.css), templates in app.py, no build step. Read DESIGN-B
 
 Section: <NAME> on <ROUTE>. Current HTML: <PASTE>. Relevant CSS: <PASTE>.
 Job: <ONE SENTENCE — what a student must understand or do here>. Mostly mobile, 360–430px.
-
 Constraints: ascii-magic.com/landing direction; tokens only (DESIGN-BRIEF.md §2); 1px
 borders; radius 0 for new work; Funnel Display/Geist/Geist Mono; no gradients, glass, violet,
 emoji, stock copy or invented numbers. Keep class names, data-* hooks, routes and field names.
 Work without JS; 360–1440; no horizontal scroll; 44px targets; focus-visible; reduced motion.
-
-Deliver: section HTML; CSS under a new numbered section; four lines on changes, removals,
-risks, tests. If it already meets the job, say so and propose at most two changes. Do not
-rewrite the page or add dependencies.
+Deliver: HTML; CSS under a numbered section; four lines on changes, risks, tests. If it
+already meets the job, say so and propose at most two changes. Do not rewrite the page.
 ```
 
 ### b. Build a new component
@@ -303,14 +287,12 @@ static/style.css, vanilla JS, no build step. Read DESIGN-BRIEF.md.
 Component: <NAME>. Purpose: <WHAT IT LETS A USER DO>. Used on: <ROUTES>.
 Data: <FIELDS AND TYPES, OR "static">. States: default, hover, focus-visible, active,
 disabled, empty, error, loading if it submits.
-
 Constraints: semantic HTML that works without JS; enhance only if unavoidable. Reuse
 .shell, .section, .card, .btn, .badge, .pill, .field, .notice, .mono, .muted; prefix new
 classes. 1px borders, radius 0, no shadows except an 8px offset block; no gradients, glass,
 violet, emoji, icon fonts or UI libraries. Funnel Display/Geist/Geist Mono. Mobile-first at
 360, 390, 768, 1440; 44px targets; 4.5:1 contrast; reduced motion shows the final state. All
 five palettes via html[data-theme] must work.
-
 Deliver: a one-paragraph contract (root, classes, attributes, slots, states); HTML; CSS under
 a numbered section; minimal JS with no-JS fallback, if justified; a demo with realistic seed
 data and a five-item test list. Do not invent endpoints, fields, copy or statistics.
@@ -320,7 +302,6 @@ data and a five-item test list. Do not invent endpoints, fields, copy or statist
 ```text
 Translate a Figma design into production code for SCCI Magic: Python stdlib + SQLite,
 server-rendered HTML, static/style.css, no build step. Read DESIGN-BRIEF.md.
-
 Figma: <FILE KEY OR URL>. Node: <NODE ID, e.g. 1234:5678>. Target: <ROUTE / COMPONENT>.
 Breakpoints: 1440, 768, 390.
 
@@ -330,10 +311,8 @@ for assets CSS cannot recreate). Report: palette — every fill and stroke mappe
 weight, size, line-height, tracking; spacing — padding, gaps, widths, snapped to the 4px
 scale; motion — prototype durations and easing; assets — export size and format; deltas —
 anything without a token or component equivalent.
-
 If Figma conflicts with the brief, the brief wins; list the conflict. Reject gradients, glass,
 blur, violet, emoji and radii other than 0/5/999px; replace with flat token equivalents.
-
 Build: semantic HTML using existing classes and data-* hooks; CSS under a numbered section;
 no absolute positioning for layout; no off-scale pixels except type and borders. Must work at
 360 without horizontal scroll, 44px targets, focus-visible, reduced motion, all five palettes.
@@ -350,11 +329,8 @@ Capture full page at 1440×900, 768×1024, 390×844 and 360×800 for /, /clubs, 
 ?theme=rose|paper|tomato|butter|blush. At 390, home and events in rose, tomato and paper.
 One keyboard pass, screenshotting the third and eighth focus stops. One pass with
 prefers-reduced-motion: reduce.
-
 Example:
-npx playwright screenshot --viewport-size="1440,900" --full-page \
-  "http://localhost:8770/events?theme=paper" /tmp/qa/2026-11-26/events-1440-paper.png
-
+npx playwright screenshot --viewport-size="1440,900" --full-page "http://localhost:8770/events?theme=paper" /tmp/qa/2026-11-26/events-1440-paper.png
 Check every shot: (1) no horizontal scroll at 360, no clipped text; (2) one clear H1 and sane
 heading order; (3) 44×44 targets; (4) 2px accent focus ring, 2px offset, never obscured;
 (5) text ≥4.5:1 and UI ≥3:1 in all palettes; (6) no gradients, glass, violet, emoji, blobs or
@@ -363,7 +339,6 @@ visible fallback; (9) marquee legible and static under reduced motion; (10) visi
 labels and announced errors; (11) calendar states distinct without colour alone; (12) tables
 scroll inside their wrapper; (13) no console errors or 404s; (14) British English, sentence
 case, no exclamation marks or invented numbers.
-
 Report: Route | Viewport | Theme | Issue | Severity P0/P1/P2 | Selector or screenshot.
 P0 = broken task, accessibility failure or horizontal scroll. P1 = unclear or inconsistent.
 P2 = polish. End with the three fixes worth doing first. No praise.
@@ -387,11 +362,9 @@ all five; (7) states — hover, focus, disabled, empty, error, loading, what is 
 focus order, semantics, reduced motion, alt text, contrast; (10) character — the most
 distinctive element and the most generic, and whether it looks like this brief or a SaaS
 template.
-
-Score each dimension 1–5 with one sentence of evidence. Rank issues P0 (blocks a task or fails
-accessibility), P1 (weakens comprehension or trust), P2 (polish). For each P0/P1 give the
-smallest concrete fix: element, property, value. Do not redesign the page. End with three
-fixes in order, one thing to keep, and a one-line verdict against the brief's success criteria.
+Score each dimension 1–5 with one sentence of evidence. Rank P0 (blocks a task or fails
+accessibility), P1 (weakens comprehension), P2 (polish), and give each P0/P1 the smallest fix:
+element, property, value. Do not redesign. End with three fixes in order, one keeper, one verdict.
 ```
 
 ## 5. Definition of done
@@ -419,13 +392,9 @@ fixes in order, one thing to keep, and a one-line verdict against the brief's su
 | Hero loop, per clip per palette | 1080×1080, VP9 WebM, 3–6s seamless, 24–30fps, sRGB, no audio, <8MB | `hero-<clip>-<motion>-<palette>.webm`; clip `events|clubs`, motion `grow|breathe` | 20 files exist but are VP8 at ~60KB; re-encode to VP9 and verify duration |
 | Poster fallback | WebP, 1080×1080, quality 80, first frame, <120KB, no text | `poster-<clip>-<palette>.webp` | Missing; required before launch |
 | Fonts | WOFF2, latin subset: Funnel Display 400/500/600, Geist 300–600, Geist Mono 400/500, Playfair Display 500/600 | `funnel-display-<weight>.woff2` etc. | Google Fonts link exists; Playfair not loaded; self-host with `font-display: swap` |
-| Favicon | SVG, 32×32 viewBox, 1px strokes, works on all grounds | `favicon.svg` | Present |
-| Theme colour | One `theme-color` per palette, matching `--bg` | in `app.py` and JS | Present; keep in sync |
-| ASCII art | Generated by `ascii.js` / `ascii_banner()`; no bitmaps | n/a | Present |
 | Copy deck | All UI strings, British English, sentence case, no placeholders | n/a | Scattered in `app.py`; consolidate only when touched |
 
 Video direction: one slow “type garden” loop per palette — stems, leaves and petals growing
 and breathing against the ground, accent as the flower. No camera moves, cuts or loop-point
-fades; first and last frame must match. Encode with
-`ffmpeg -c:v libvpx-vp9 -b:v 0 -crf 34 -an`; check with `ffprobe -show_entries format=duration`
-(the current VP8 files report `N/A`).
+fades; first and last frame must match. Encode with `ffmpeg -c:v libvpx-vp9 -b:v 0 -crf 34
+-an`; check with `ffprobe -show_entries format=duration` (current VP8 files report `N/A`).

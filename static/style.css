@@ -661,3 +661,20 @@ html[data-theme] { --accent-text: var(--accent); }
   .themes button[aria-pressed="true"] { outline: 2px solid var(--accent); outline-offset: 2px; }
   .bar { gap: 12px; }
 }
+
+/* ---------- Langard palette: teal, mint, caslon ---------- */
+html[data-theme="garden"] {
+  --bg: #FAFAFA; --surface: #F1F1EE; --panel: #FFFFFF;
+  --border: rgba(18,18,18,.12); --strong: rgba(18,18,18,.30);
+  --ink: #121212; --muted: #676767; --accent: #033040; --accent-ink: #FAFAFA;
+  --tint: rgba(3,48,64,.08); --flower: #A9FFCA; --accent-2: #033040;
+  --display: "Libre Caslon Display", Georgia, serif;
+  color-scheme: light;
+}
+html[data-theme="garden"] .hero-split h1,
+html[data-theme="garden"] .poster h1 { font-family: "Libre Caslon Display", Georgia, serif; font-weight: 400; letter-spacing: -.02em; }
+html[data-theme="garden"] .section { margin-top: 96px; }
+html[data-theme="garden"] .stage-video[data-missing],
+html[data-theme="garden"] .media-band video[data-missing] { display: none; }
+html[data-theme="garden"] .ascii-stage { background: radial-gradient(120% 120% at 20% 10%, #A9FFCA, #033040 72%); }
+html[data-theme="garden"] .media-band { background: radial-gradient(120% 120% at 20% 10%, #A9FFCA, #033040 72%); min-height: 240px; }

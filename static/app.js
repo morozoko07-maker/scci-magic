@@ -2,8 +2,8 @@
 (function () {
   "use strict";
 
-  var THEMES = ["rose", "paper", "tomato", "butter", "blush"];
-  var COLOURS = { rose: "#000000", paper: "#F3EEE4", tomato: "#FF1400", butter: "#FFE9A8", blush: "#FAD4D8" };
+  var THEMES = ["rose", "paper", "tomato", "butter", "blush", "garden"];
+  var COLOURS = { rose: "#000000", paper: "#F3EEE4", tomato: "#FF1400", butter: "#FFE9A8", blush: "#FAD4D8", garden: "#FAFAFA" };
   var root = document.documentElement;
   var meta = document.querySelector('meta[name="theme-color"]');
 
@@ -34,6 +34,8 @@
           motion = "breathe";
           v.src = videoUrl(clip, motion, theme);
           v.play().catch(function () {});
+        } else {
+          v.setAttribute("data-missing", "1");
         }
       };
       var next = videoUrl(clip, motion, theme);
