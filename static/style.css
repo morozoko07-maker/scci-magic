@@ -985,3 +985,48 @@ html[data-theme="blush"] .hero-split, html[data-theme="blush"] .hero.compact, ht
 .cal-day .dnum { color: var(--soft-ink); }
 .cal-day.is-today .dnum { color: var(--accent-deep); }
 .season-media { border-bottom-color: var(--line-2); }
+
+/* ---------- QA fixes ---------- */
+/* ghost buttons stay ghosts */
+.btn-ghost, .btn-ghost:hover { background: transparent !important; }
+.hero-split .btn-ghost, .hero.compact .btn-ghost, .v-join .btn-ghost,
+.v-hero .btn-ghost { color: var(--theme-ink) !important; border-color: color-mix(in srgb, var(--theme-ink) 45%, transparent) !important; }
+.hero-split .btn-ghost:hover, .hero.compact .btn-ghost:hover, .v-join .btn-ghost:hover { background: color-mix(in srgb, var(--theme-ink) 12%, transparent) !important; }
+.btn:not(.btn-ghost) { background: var(--accent); color: var(--accent-ink); }
+
+/* inputs with no type attribute */
+.field input:not([type]), .field input[type="text"] {
+  width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid var(--border);
+  border-radius: var(--radius); background: var(--field-bg); color: var(--ink); font: inherit; font-size: .9rem;
+}
+
+/* one column hero on phones (specificity beats the base rule) */
+@media (max-width: 900px) {
+  .hero.hero-split, .hero-split { grid-template-columns: 1fr !important; }
+  .hero-split .ascii-stage { min-height: 220px; }
+  .menu-toggle { width: 44px; height: 44px; }
+  .check input { width: 22px; height: 22px; }
+  .crumb a, .ev-card, .club-copy h2 a { min-height: 44px; display: inline-flex; align-items: center; }
+}
+
+/* notices read on any band */
+.hero .notice, .hero-split .notice { background: var(--card); color: var(--card-ink); border-color: var(--border); }
+
+/* kind badges legible on white */
+.kind-hackathon { color: #8a4b00; border-color: rgba(138,75,0,.35); background: rgba(224,164,88,.14); }
+.kind-talk { color: #1f5a73; border-color: rgba(31,90,115,.35); background: rgba(106,159,181,.14); }
+.kind-workshop { color: #3f5a1c; border-color: rgba(63,90,28,.35); background: rgba(127,166,80,.14); }
+.kind-interview { color: #8a2f3a; border-color: rgba(138,47,58,.35); background: rgba(201,123,132,.14); }
+.kind-meetup { color: #4a3d76; border-color: rgba(74,61,118,.35); background: rgba(155,142,196,.14); }
+.kind-sports { color: #1f4a3e; border-color: rgba(31,74,62,.35); background: rgba(90,143,123,.14); }
+.kind-cultural { color: #6b4a2a; border-color: rgba(107,74,42,.35); background: rgba(176,137,104,.14); }
+
+/* text on the tinted band derives from the band ink */
+.hero-split .lede, .hero.compact .lede, .hero-split .muted, .hero.compact .muted {
+  color: color-mix(in srgb, var(--theme-ink) 76%, transparent) !important;
+}
+.hero-split .eyebrow, .hero.compact .eyebrow { color: color-mix(in srgb, var(--accent) 80%, var(--theme-ink)) !important; }
+
+/* seasonal video band always has height */
+.season-media { min-height: 240px; }
+.season-media .video-js, .season-media video { min-height: 240px; }

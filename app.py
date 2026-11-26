@@ -189,6 +189,12 @@ def fmt_dt(value: str, with_time=True) -> str:
     return dt.strftime("%a %d %b · %H:%M") if with_time else dt.strftime("%a %d %b %Y")
 
 
+def readable_ink(hex_value: str) -> str:
+    h = safe_accent(hex_value).lstrip("#")
+    r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+    return "#111111" if (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.62 else "#ffffff"
+
+
 def safe_accent(value: str) -> str:
     return value if re.fullmatch(r"#[0-9a-fA-F]{6}", value or "") else "#8fa68e"
 
@@ -240,6 +246,11 @@ def layout(title: str, body: str, active: str = "", description: str = "") -> st
   <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
     <span></span><span></span><span></span>
   </button>
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <div class="mm-links">{links}</div>
+    <p class="mm-label">Themes</p>
+    <div class="mm-themes">{"".join(f'<button type="button" data-theme-set="{k}">{label}</button>' for k, label in THEMES)}</div>
+  </div>
 </header>
 <main class="shell">
 {body}
@@ -460,10 +471,10 @@ def page_club(con, slug, notice=""):
     else:
         join = '<p class="notice">This club is not taking applications right now.</p>'
     body = f"""
-<div class="club-page" style="--accent:{safe_accent(club['accent'])};--accent-ink:#ffffff">
+<div class="club-page" style="--accent:{safe_accent(club['accent'])};--accent-ink:{readable_ink(club['accent'])}">
 <section class="club-hero banner-{esc(club['banner'])}" style="--club-accent:{safe_accent(club['accent'])}">
   <p class="pill">{esc(club['category'])}</p>
-  <h1 data-garden="{esc(club['name'])}">{esc(club['name'])}</h1>
+  <h1>{esc(club['name'])}</h1>
   <p class="lede">{esc(club['tagline'] or '')}</p>
   <div class="hero-actions">{''.join(links)}</div>
 </section>
@@ -538,14 +549,14 @@ def page_events(con, query):
         (month_start, month_end),
     ).fetchall()
     visible = [e for e in rows if not kind or e["kind"] == kind]
-    kinds = ['<button class="pill filter is-active" data-kind-filter="all" aria-pressed="true">All</button>']
-    kinds += [f'<button class="pill filter" data-kind-filter="{k}" aria-pressed="false">{k}</button>' for k in KINDS]
+    kinds = [f'<button class="pill filter{" is-active" if not kind else ""}" data-kind-filter="all" aria-pressed="{"true" if not kind else "false"}">All</button>']
+    kinds += [f'<button class="pill filter{" is-active" if kind == k else ""}" data-kind-filter="{k}" aria-pressed="{"true" if kind == k else "false"}">{k}</button>' for k in KINDS]
     body = f"""
 <div class="events-page">
 <section class="hero compact">
   <p class="eyebrow">What is happening</p>
   <h1 data-garden="Events">Events</h1>
-  <p class="lede">Everything approved clubs are running, in one calendar. {len(rows)} event{'s' if len(rows) != 1 else ''} in {first.strftime('%B %Y')}.</p>
+  <p class="lede">Everything approved clubs are running, in one calendar. {len(visible)} event{'s' if len(visible) != 1 else ''} in {first.strftime('%B %Y')}.</p>
 </section>
 <div class="toolbar"><div class="filters">{''.join(kinds)}</div>
   <a class="btn btn-ghost" href="/calendar.ics">Subscribe (.ics)</a></div>
@@ -677,7 +688,7 @@ def page_manage(con, token, notice="", error=""):
     body = f"""
 <section class="hero compact">
   <p class="eyebrow">Dashboard</p>
-  <h1 data-garden="{esc(club['name'])}">{esc(club['name'])}</h1>
+  <h1>{esc(club['name'])}</h1>
   <p class="lede">Edit the page, add events, and read applications. {evs} events · {apps} applications.</p>
   {status}{notice}{error}
 </section>

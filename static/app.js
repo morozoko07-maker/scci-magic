@@ -25,7 +25,12 @@
     return "/static/media/hero-" + clip + "-" + motion + "-" + theme + ".webm";
   }
 
+  function videoTheme(theme) {
+    return theme === "garden" ? "rose" : theme;   // no garden clips yet
+  }
+
   function loadVideos(theme) {
+    theme = videoTheme(theme);
     document.querySelectorAll("video[data-clip]").forEach(function (v) {
       var clip = v.getAttribute("data-clip");
       var motion = v.getAttribute("data-motion") || "grow";
