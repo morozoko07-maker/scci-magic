@@ -842,3 +842,6 @@ body { background: var(--bg); color: var(--ink); }
 
 /* give the bloom room above the letters */
 .hero h1[data-garden] { padding-top: 1.15em; }
+
+.cal .cal-day.is-outside { background: var(--card) !important; opacity: .5; }
+.cal .cal-week span { background: transparent !important; }
