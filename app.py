@@ -407,7 +407,7 @@ def page_clubs(con, query):
     body = f"""
 <section class="hero compact">
   <p class="eyebrow">Directory</p>
-  <h1 data-garden="Clubs">Clubs</h1>
+  <h1 class="sr-only">Clubs</h1>
   <p class="lede">{len(clubs)} approved club{'s' if len(clubs) != 1 else ''}. Filter by category or search by name.</p>
 </section>
 <div class="media-band"><video data-clip="clubs" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video></div>
@@ -542,7 +542,7 @@ def page_events(con, query):
     body = f"""
 <section class="hero compact">
   <p class="eyebrow">What is happening</p>
-  <h1 data-garden="Events">Events</h1>
+  <h1 class="sr-only">Events</h1>
   <p class="lede">Everything approved clubs are running, in one calendar. {len(rows)} event{'s' if len(rows) != 1 else ''} in {first.strftime('%B %Y')}.</p>
 </section>
 <div class="media-band"><video data-clip="events" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video></div>

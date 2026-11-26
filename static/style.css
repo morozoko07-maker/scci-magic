@@ -678,3 +678,5 @@ html[data-theme="garden"] .stage-video[data-missing],
 html[data-theme="garden"] .media-band video[data-missing] { display: none; }
 html[data-theme="garden"] .ascii-stage { background: radial-gradient(120% 120% at 20% 10%, #A9FFCA, #033040 72%); }
 html[data-theme="garden"] .media-band { background: radial-gradient(120% 120% at 20% 10%, #A9FFCA, #033040 72%); min-height: 240px; }
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
