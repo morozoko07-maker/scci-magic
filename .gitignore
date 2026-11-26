@@ -12,3 +12,6 @@ __pycache__/
 
 # os / editors
 .DS_Store
+
+# design references (not served)
+static/figma/wrapped/

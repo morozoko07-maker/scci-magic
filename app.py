@@ -327,27 +327,28 @@ def page_home(con):
     now_dt = datetime.now()
     week = [e for e in events if datetime.fromisoformat(e["starts_at"]) <= now_dt + timedelta(days=7)]
     body = f"""
-<section class="hero hero-split">
-  <div class="hero-copy">
-    <p class="eyebrow">Student clubs · one portal</p>
-    <h1 data-garden="Every club on campus, in one place.">Every club on campus, <em>in one place.</em></h1>
-    <p class="lede">Find a club, see what it does, apply to join. Clubs get a page they control and
-       a shared calendar for hackathons, talks, interviews and meets.</p>
-    <div class="hero-actions">
-      <a class="btn" href="/clubs">Browse clubs</a>
-      <a class="btn btn-ghost" href="/register">Register your club</a>
-    </div>
-    <div class="stats">
+<section class="poster">
+  <div class="poster-head"><span>STUDENT CLUBS · ONE PORTAL</span><span>SCCI / 01</span></div>
+  <div class="poster-body">
+    <p class="poster-copy">Find a club, see what it does, apply to join. Every club gets a page it controls, and every event lands in one calendar.</p>
+    <h1>Every club<br>on campus,<br><span class="outline">in one place.</span></h1>
+    <p class="poster-copy right">Hackathons, talks, workshops, interviews, meets — posted by the clubs themselves, approved before they go live.</p>
+  </div>
+  <div class="poster-foot">
+    <div class="poster-stats">
       <div><strong>{len(clubs)}</strong><span>clubs</span></div>
-      <div><strong>{len(events)}</strong><span>upcoming events</span></div>
+      <div><strong>{len(events)}</strong><span>upcoming</span></div>
       <div><strong>{len(week)}</strong><span>this week</span></div>
     </div>
+    <div class="poster-actions">
+      <a class="pbtn" href="/clubs">Browse clubs</a>
+      <a class="pbtn ghost" href="/register">Register a club</a>
+    </div>
   </div>
-  <div class="ascii-stage">
-    <video class="stage-video" data-clip="events" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video>
-    <span class="stage-tag">EVENTS · LIVE</span>
-    <span class="stage-idx">SM/01</span>
-  </div>
+  <img class="cutout cut-a" src="/static/figma/cutout-a.png" alt="" aria-hidden="true">
+  <img class="cutout cut-b" src="/static/figma/cutout-b.png" alt="" aria-hidden="true">
+  <span class="poster-x x1">X</span><span class="poster-x x2">X</span><span class="poster-x x3">X</span>
+  <span class="poster-scroll">SCROLL DOWN</span>
 </section>
 
 <pre class="ascii" aria-hidden="true">{ascii_banner("SCCI MAGIC")}</pre>
