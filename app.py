@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""SCCI Magic — a self-hostable club portal.
+"""Clubbb — a self-hostable club portal.
 
 Python standard library only. Run:  python3 app.py  → http://localhost:8770
 """
@@ -88,25 +88,6 @@ def init_db() -> None:
         con.execute("ALTER TABLE events ADD COLUMN cover TEXT DEFAULT ''")
     con.commit()
     con.close()
-
-
-def ascii_banner(text: str) -> str:
-    """5x7 block font — crisp enough to read at small sizes."""
-    glyphs = {
-        "S": ["01111", "10000", "10000", "01110", "00001", "00001", "11110"],
-        "C": ["01110", "10001", "10000", "10000", "10000", "10001", "01110"],
-        "I": ["11111", "00100", "00100", "00100", "00100", "00100", "11111"],
-        "M": ["10001", "11011", "10101", "10101", "10001", "10001", "10001"],
-        "A": ["01110", "10001", "10001", "11111", "10001", "10001", "10001"],
-        "G": ["01110", "10001", "10000", "10111", "10001", "10001", "01111"],
-        " ": ["00000"] * 7,
-    }
-    rows = [""] * 7
-    for ch in text.upper():
-        g = glyphs.get(ch, glyphs[" "])
-        for i in range(7):
-            rows[i] += "".join("██" if c == "1" else "  " for c in g[i]) + "   "
-    return "\n".join(r.rstrip() for r in rows)
 
 
 def save_upload(files) -> str:
@@ -237,7 +218,7 @@ def layout(title: str, body: str, active: str = "", description: str = "") -> st
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(title)} · SCCI Magic</title>
+<title>{esc(title)} · Clubbb</title>
 <meta name="description" content="{esc(description or "Every club on campus, in one place. Register a club, post events, and find what is happening this week.")}">
 <meta name="theme-color" content="#000000">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -251,22 +232,25 @@ def layout(title: str, body: str, active: str = "", description: str = "") -> st
 </head>
 <body>
 <header class="bar">
-  <a class="brand" href="/"><span class="mark">SM</span><span>SCCI Magic</span></a>
+  <a class="brand" href="/"><span class="mark">CB</span><span>Clubbb</span></a>
   <nav class="nav">{links}</nav>
   {THEME_BUTTONS}
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 <main class="shell">
 {body}
 </main>
 <footer class="foot">
-  <p><strong>SCCI Magic</strong> · a student-run portal. Not affiliated with any institution.
+  <p><strong>Clubbb</strong> · a student-run portal. Not affiliated with any institution.
      No accounts, no tracking, no ads.</p>
   <p class="muted">Clubs register themselves; an administrator approves before a page goes live.</p>
 </footer>
 <script src="/static/app.js"></script>
 <script src="/static/shaders.js"></script>
-<script src="/static/ascii.js"></script>
 <script src="/static/garden-heading.js"></script>
+<script src="/static/motion.js"></script>
 </body>
 </html>"""
 
@@ -327,64 +311,79 @@ def page_home(con):
     now_dt = datetime.now()
     week = [e for e in events if datetime.fromisoformat(e["starts_at"]) <= now_dt + timedelta(days=7)]
     body = f"""
-<section class="poster">
-  <div class="poster-head"><span>STUDENT CLUBS · ONE PORTAL</span><span>SCCI / 01</span></div>
-  <div class="poster-body">
-    <p class="poster-copy">Find a club, see what it does, apply to join. Every club gets a page it controls, and every event lands in one calendar.</p>
-    <h1>Every club<br>on campus,<br><span class="outline">in one place.</span></h1>
-    <p class="poster-copy right">Hackathons, talks, workshops, interviews, meets — posted by the clubs themselves, approved before they go live.</p>
-  </div>
-  <div class="poster-foot">
-    <div class="poster-stats">
-      <div><strong>{len(clubs)}</strong><span>clubs</span></div>
-      <div><strong>{len(events)}</strong><span>upcoming</span></div>
-      <div><strong>{len(week)}</strong><span>this week</span></div>
-    </div>
-    <div class="poster-actions">
-      <a class="pbtn" href="/clubs">Browse clubs</a>
-      <a class="pbtn ghost" href="/register">Register a club</a>
-    </div>
-  </div>
-  <img class="cutout cut-a" src="/static/figma/cutout-a.png" alt="" aria-hidden="true">
-  <img class="cutout cut-b" src="/static/figma/cutout-b.png" alt="" aria-hidden="true">
-  <span class="poster-x x1">X</span><span class="poster-x x2">X</span><span class="poster-x x3">X</span>
-  <span class="poster-scroll">SCROLL DOWN</span>
-</section>
+<div class="vpage">
+  <section class="v-section v-hero" id="top">
+    <section class="hero hero-split">
+      <div class="hero-copy">
+        <p class="eyebrow">Student clubs · one portal</p>
+        <h1>Every club on campus, <em>in one place.</em></h1>
+        <p class="lede">Find a club, see what it does, apply to join. Clubs get a page they control and a shared calendar for hackathons, talks, interviews and meets.</p>
+        <div class="hero-actions">
+          <a class="btn" href="/clubs">Browse clubs</a>
+          <a class="btn btn-ghost" href="/register">Register your club</a>
+        </div>
+        <div class="stats">
+          <div><strong>{len(clubs)}</strong><span>clubs</span></div>
+          <div><strong>{len(events)}</strong><span>upcoming events</span></div>
+          <div><strong>{len(week)}</strong><span>this week</span></div>
+        </div>
+      </div>
+      <div class="ascii-stage">
+        <video class="stage-video" data-clip="events" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video>
+        <span class="stage-tag">EVENTS · LIVE</span>
+        <span class="stage-idx">CB/01</span>
+      </div>
+    </section>
+  </section>
 
-<pre class="ascii" aria-hidden="true">{ascii_banner("SCCI MAGIC")}</pre>
+  <section class="v-section" id="clubs">
+    <div class="v-head"><span class="v-num">01</span><h2>Clubs</h2><a class="mono" href="/clubs">All {len(clubs)} clubs →</a></div>
+    <div class="club-showcase">{club_showcase(con, clubs[:3])}</div>
+  </section>
 
-<div class="ticker" aria-hidden="true">
-  <div class="ticker-track">
-    <span>HACKATHONS</span><i>/</i><span>TALKS</span><i>/</i><span>WORKSHOPS</span><i>/</i>
-    <span>CLUB FAIR</span><i>/</i><span>INTERVIEWS</span><i>/</i><span>SPORTS</span><i>/</i>
-    <span>CULTURALS</span><i>/</i>
-    <span>HACKATHONS</span><i>/</i><span>TALKS</span><i>/</i><span>WORKSHOPS</span><i>/</i>
-    <span>CLUB FAIR</span><i>/</i><span>INTERVIEWS</span><i>/</i><span>SPORTS</span><i>/</i>
-    <span>CULTURALS</span><i>/</i>
-  </div>
+  <section class="v-section" id="events">
+    <div class="v-head"><span class="v-num">02</span><h2>Events</h2><a class="mono" href="/events">Full calendar →</a></div>
+    {''.join(event_row(e) for e in events[:4]) or '<p class="empty">No events yet.</p>'}
+  </section>
+
+  <section class="v-section v-join" id="join">
+    <p class="eyebrow">03 · For clubs</p>
+    <h2>Start something<br>worth joining.</h2>
+    <p class="lede">Register your club, get a page you control, and put your events on the same calendar every student already reads.</p>
+    <div class="hero-actions">
+      <a class="btn" href="/register">Register a club</a>
+      <a class="btn btn-ghost" href="/clubs">See the directory</a>
+    </div>
+  </section>
 </div>
-
-<section class="section">
-  <div class="section-head"><h2><span class="sec-num">01</span>On the radar</h2><a class="mono" href="/events">Full calendar →</a></div>
-  <div class="panels">{''.join(shader_panel(e) for e in events[:4]) or '<p class="empty">No events yet.</p>'}</div>
-</section>
-
-<section class="section">
-  <div class="section-head"><h2><span class="sec-num">01</span>This week</h2><a class="mono" href="/events">Full calendar →</a></div>
-  {''.join(event_row(e) for e in week[:4]) or '<p class="empty">Nothing scheduled in the next seven days.</p>'}
-</section>
-
-<section class="section">
-  <div class="section-head"><h2><span class="sec-num">02</span>Clubs</h2><a class="mono" href="/clubs">All clubs →</a></div>
-  <div class="grid">{''.join(club_card(c) for c in clubs[:6])}</div>
-</section>
-
-<section class="section">
-  <div class="section-head"><h2><span class="sec-num">02</span>Coming up</h2><a class="mono" href="/calendar.ics">Subscribe (.ics)</a></div>
-  {''.join(event_row(e) for e in events[4:12]) or '<p class="empty">No events listed yet.</p>'}
-</section>
+<nav class="v-dots" aria-label="Page sections">
+  <a href="#top" aria-label="Top"></a>
+  <a href="#clubs" aria-label="Clubs"></a>
+  <a href="#events" aria-label="Events"></a>
+  <a href="#join" aria-label="Join"></a>
+</nav>
 """
     return 200, layout("Home", body, "home")
+
+
+def club_showcase(con, clubs):
+    rows = []
+    for c in clubs:
+        n = con.execute("select count(*) from events where club_id=?", (c["id"],)).fetchone()[0]
+        initials = "".join(w[0] for w in c["name"].split()[:2]).upper()
+        about = (c["about"] or "").replace("\n", " ").strip()
+        excerpt = about[:220] + ("…" if len(about) > 220 else "")
+        rows.append(f"""<article class="club-row" data-tags="{esc(c['category'])}" style="--club-accent:{safe_accent(c['accent'])}">
+  <a class="club-visual" href="/c/{esc(c['slug'])}" aria-hidden="true" tabindex="-1"><span class="club-initials">{esc(initials)}</span></a>
+  <div class="club-copy">
+    <p class="club-meta">{esc(c['category'])} · {n} event{'s' if n != 1 else ''}</p>
+    <h2><a href="/c/{esc(c['slug'])}">{esc(c['name'])}</a></h2>
+    <p class="club-tag">{esc(c['tagline'] or 'A student club on campus.')}</p>
+    <p class="club-about">{esc(excerpt)}</p>
+    <div class="club-actions"><a class="btn" href="/c/{esc(c['slug'])}">View club</a></div>
+  </div>
+</article>""")
+    return "".join(rows)
 
 
 def page_clubs(con, query):
@@ -407,15 +406,14 @@ def page_clubs(con, query):
     body = f"""
 <section class="hero compact">
   <p class="eyebrow">Directory</p>
-  <h1 class="sr-only">Clubs</h1>
+  <h1>Clubs</h1>
   <p class="lede">{len(clubs)} approved club{'s' if len(clubs) != 1 else ''}. Filter by category or search by name.</p>
 </section>
-<div class="media-band"><video data-clip="clubs" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video></div>
 <div class="toolbar">
   <div class="filters">{''.join(filters)}</div>
   <input id="club-search" class="search" type="search" placeholder="Search clubs (press /)" value="{esc(q)}" aria-label="Search clubs">
 </div>
-<div class="grid" id="club-grid">{''.join(club_card(c) for c in clubs)}</div>
+<div class="club-showcase" id="club-grid">{club_showcase(con, clubs)}</div>
 <p class="empty" id="club-empty" hidden>No clubs match that search.</p>
 """
     return 200, layout("Clubs", body, "clubs")
@@ -542,10 +540,9 @@ def page_events(con, query):
     body = f"""
 <section class="hero compact">
   <p class="eyebrow">What is happening</p>
-  <h1 class="sr-only">Events</h1>
+  <h1 data-garden="Events">Events</h1>
   <p class="lede">Everything approved clubs are running, in one calendar. {len(rows)} event{'s' if len(rows) != 1 else ''} in {first.strftime('%B %Y')}.</p>
 </section>
-<div class="media-band"><video data-clip="events" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video></div>
 <div class="toolbar"><div class="filters">{''.join(kinds)}</div>
   <a class="btn btn-ghost" href="/calendar.ics">Subscribe (.ics)</a></div>
 <section class="cal card">
@@ -935,7 +932,7 @@ def ics_escape(text: str) -> str:
 
 
 def ics_calendar(con) -> str:
-    lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//SCCI Magic//EN", "CALSCALE:GREGORIAN"]
+    lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Clubbb//EN", "CALSCALE:GREGORIAN"]
     for ev in upcoming_events(con, 200):
         start = ev["starts_at"].replace("-", "").replace(":", "")
         end = (ev["ends_at"] or ev["starts_at"]).replace("-", "").replace(":", "")
@@ -1062,7 +1059,7 @@ class App(BaseHTTPRequestHandler):
 
 def main() -> int:
     init_db()
-    print(f"SCCI Magic on http://{HOST}:{PORT}")
+    print(f"Clubbb on http://{HOST}:{PORT}")
     print(f"Admin: http://{HOST}:{PORT}/admin?key={admin_key()}")
     ThreadingHTTPServer((HOST, PORT), App).serve_forever()
     return 0

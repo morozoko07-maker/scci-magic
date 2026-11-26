@@ -69,8 +69,27 @@
   }
   paintTheme();
 
+  // mobile menu
+  var toggle = document.querySelector(".menu-toggle");
+  var menu = document.getElementById("mobile-menu");
+  if (toggle && menu) {
+    toggle.addEventListener("click", function () {
+      var open = menu.hasAttribute("hidden");
+      if (open) menu.removeAttribute("hidden"); else menu.setAttribute("hidden", "");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    });
+    menu.addEventListener("click", function (e) {
+      if (e.target.closest("a") || e.target.closest("[data-theme-set]")) {
+        menu.setAttribute("hidden", "");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", "Open menu");
+      }
+    });
+  }
+
   // club directory
-  var cards = Array.prototype.slice.call(document.querySelectorAll(".club-card"));
+  var cards = Array.prototype.slice.call(document.querySelectorAll(".club-row"));
   var filterButtons = Array.prototype.slice.call(document.querySelectorAll("[data-filter]"));
   var search = document.getElementById("club-search");
   var empty = document.getElementById("club-empty");

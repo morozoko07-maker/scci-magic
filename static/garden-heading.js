@@ -13,7 +13,7 @@
   function palette() {
     var cs = getComputedStyle(document.documentElement);
     return {
-      ink: cs.getPropertyValue("--ink").trim() || "#fff",
+      ink: cs.getPropertyValue("--theme-ink").trim() || cs.getPropertyValue("--ink").trim() || "#fff",
       accent: cs.getPropertyValue("--accent").trim() || "#FF1400",
       flower: cs.getPropertyValue("--flower").trim() || cs.getPropertyValue("--accent").trim() || "#FF1400",
       stem: cs.getPropertyValue("--accent-2").trim() || "#3257FF",
