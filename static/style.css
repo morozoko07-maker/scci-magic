@@ -929,3 +929,59 @@ body { background: var(--theme-wash); }
 /* calendar: readable rows with event chips */
 .cal-day { min-height: 84px; }
 .cal-day .ev { display: block; }
+
+/* ---------- shade families derived from each palette ---------- */
+:root, html[data-theme] {
+  --wash: color-mix(in srgb, var(--theme-bg) 10%, #FAFAFA);
+  --wash-2: color-mix(in srgb, var(--theme-bg) 18%, #FAFAFA);
+  --line: color-mix(in srgb, var(--theme-bg) 26%, transparent);
+  --line-2: color-mix(in srgb, var(--theme-bg) 44%, transparent);
+  --soft-ink: color-mix(in srgb, var(--ink) 68%, var(--theme-bg));
+  --accent-deep: color-mix(in srgb, var(--accent) 76%, #000);
+  --accent-pale: color-mix(in srgb, var(--accent) 12%, #FFFFFF);
+  --accent-mid: color-mix(in srgb, var(--accent) 42%, #FFFFFF);
+}
+body { background: var(--wash); }
+.bar { background: color-mix(in srgb, var(--wash) 90%, transparent); border-bottom-color: var(--line-2); }
+.foot { background: var(--wash-2); border-top-color: var(--line-2); }
+
+/* heading band: two shades of the palette */
+.hero-split, .hero.compact, .v-join {
+  background: linear-gradient(155deg, var(--theme-bg), color-mix(in srgb, var(--theme-bg) 84%, #000));
+}
+html[data-theme="paper"] .hero-split, html[data-theme="paper"] .hero.compact, html[data-theme="paper"] .v-join,
+html[data-theme="butter"] .hero-split, html[data-theme="butter"] .hero.compact, html[data-theme="butter"] .v-join,
+html[data-theme="blush"] .hero-split, html[data-theme="blush"] .hero.compact, html[data-theme="blush"] .v-join {
+  background: linear-gradient(155deg, var(--theme-bg), color-mix(in srgb, var(--theme-bg) 82%, #FFFFFF));
+}
+
+/* structure in shades */
+.v-section, .season-head, .ev-card, .club-row, .event-row, .section-head, .cal-head { border-color: var(--line); }
+.v-head h2, .season-head h2 { position: relative; }
+.v-head h2::after, .season-head h2::after {
+  content: ""; display: block; height: 3px; width: 46px; margin-top: 10px;
+  background: var(--accent-mid);
+}
+.v-num, .eyebrow, .date-block, .ev-date { color: var(--accent-deep); }
+.club-meta { color: var(--accent-deep); }
+.club-copy h2 a:hover { color: var(--accent-deep); }
+
+/* cards keep white but carry a tinted edge */
+.card, .form, .cal, .panel, .tablewrap, .club-row { border-color: var(--line); }
+.card, .form, .cal, .tablewrap { box-shadow: inset 0 2px 0 var(--accent-pale); }
+.badge { background: var(--accent-pale); border-color: var(--accent-mid); }
+.badge .badge-k { color: var(--soft-ink); }
+.event-row:hover { background: var(--accent-pale); }
+.ev-card:hover { background: var(--accent-pale); }
+.btn { background: var(--accent); }
+.btn:hover { background: var(--accent-deep); color: #fff; }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent-deep); }
+.club-visual {
+  background:
+    radial-gradient(120% 120% at 20% 0%, color-mix(in srgb, var(--club-accent) 85%, #fff) 0%, transparent 55%),
+    linear-gradient(140deg, color-mix(in srgb, var(--club-accent) 78%, #000), color-mix(in srgb, var(--club-accent) 40%, #000));
+}
+.cal-day.is-today { outline-color: var(--accent); }
+.cal-day .dnum { color: var(--soft-ink); }
+.cal-day.is-today .dnum { color: var(--accent-deep); }
+.season-media { border-bottom-color: var(--line-2); }
