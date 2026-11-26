@@ -1,0 +1,14 @@
+# local data and secrets
+portal.db
+portal.db-*
+data/
+.admin_key
+*.log
+
+# python
+__pycache__/
+*.pyc
+.venv/
+
+# os / editors
+.DS_Store

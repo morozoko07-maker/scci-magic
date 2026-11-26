@@ -1,0 +1,14 @@
+[Unit]
+Description=Campus Clubs portal
+After=network.target
+
+[Service]
+WorkingDirectory=/srv/clubportal
+Environment=HOST=0.0.0.0 PORT=8770
+EnvironmentFile=-/srv/clubportal/.env
+ExecStart=/usr/bin/python3 app.py
+Restart=on-failure
+User=www-data
+
+[Install]
+WantedBy=multi-user.target
