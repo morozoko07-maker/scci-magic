@@ -226,6 +226,8 @@ def layout(title: str, body: str, active: str = "", description: str = "") -> st
 <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=Libre+Caslon+Display&display=swap" rel="stylesheet">
 <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="https://unpkg.com/video.js@8.10.0/dist/video-js.min.css">
+<script src="https://unpkg.com/video.js@8.10.0/dist/video.min.js" defer></script>
 <script>
 (function(){{try{{var t=localStorage.getItem("portal-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}}catch(e){{}}}})();
 </script>
@@ -251,6 +253,7 @@ def layout(title: str, body: str, active: str = "", description: str = "") -> st
 <script src="/static/shaders.js"></script>
 <script src="/static/garden-heading.js"></script>
 <script src="/static/motion.js"></script>
+
 </body>
 </html>"""
 
@@ -538,6 +541,7 @@ def page_events(con, query):
     kinds = ['<button class="pill filter is-active" data-kind-filter="all" aria-pressed="true">All</button>']
     kinds += [f'<button class="pill filter" data-kind-filter="{k}" aria-pressed="false">{k}</button>' for k in KINDS]
     body = f"""
+<div class="events-page">
 <section class="hero compact">
   <p class="eyebrow">What is happening</p>
   <h1 data-garden="Events">Events</h1>
@@ -554,12 +558,23 @@ def page_events(con, query):
   <div class="cal-week"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
   {build_calendar(con, year, month)}
 </section>
-<section class="section">
-  <h2>In {first.strftime('%B')}</h2>
-  {''.join(event_row(e) for e in visible) or '<p class="empty">No events this month.</p>'}
-  <p class="empty" id="events-empty" hidden>No events of that kind this month.</p>
+<div class="season-media">
+  <video id="season-bg" class="video-js" muted loop autoplay playsinline preload="auto" data-clip="events" aria-hidden="true"></video>
+</div>
+<section class="section season-wrap">
+  <div id="events-app"></div>
+  <div id="events-fallback">
+    {''.join(event_row(e) for e in visible) or '<p class="empty">No events this month.</p>'}
+    <p class="empty" id="events-empty" hidden>No events of that kind this month.</p>
+  </div>
 </section>
-<script>window.CAL_MONTH = "{year:04d}-{month:02d}";</script>
+<script>window.CAL_MONTH = "{year:04d}-{month:02d}";
+window.__EVENTS__ = {{"month": "{year:04d}-{month:02d}", "events": {json.dumps([
+    {"id": e["id"], "title": e["title"], "kind": e["kind"], "starts_at": e["starts_at"],
+     "venue": e["venue"], "club_name": e["club_name"], "accent": e["club_accent"]}
+    for e in visible])}}};</script>
+<script type="module" src="/static/events-island.js"></script>
+</div>
 """
     return 200, layout("Events", body, "events")
 

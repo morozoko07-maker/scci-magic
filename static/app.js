@@ -39,6 +39,10 @@
         }
       };
       var next = videoUrl(clip, motion, theme);
+      if (v.id === "season-bg" && window.__seasonPlayer) {
+        try { window.__seasonPlayer.src({ src: next, type: "video/webm" }); window.__seasonPlayer.play(); } catch (e) {}
+        return;
+      }
       if (v.getAttribute("src") !== next) {
         v.setAttribute("src", next);
         v.load();
@@ -175,3 +179,16 @@
     if (search) { e.preventDefault(); search.focus(); }
   });
 })();
+
+
+/* video.js for the seasonal WebM band */
+window.addEventListener("load", function () {
+  if (!window.videojs) return;
+  var el = document.getElementById("season-bg");
+  if (!el) return;
+  var player = window.videojs(el, { controls: false, autoplay: true, muted: true, loop: true, fill: true });
+  window.__seasonPlayer = player;
+  var theme = document.documentElement.getAttribute("data-theme") || "rose";
+  player.src({ src: "/static/media/hero-events-grow-" + theme + ".webm", type: "video/webm" });
+  player.play().catch(function () {});
+});

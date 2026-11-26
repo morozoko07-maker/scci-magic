@@ -37,9 +37,10 @@
     var w = 1;
     var up = 1 + (r() < 0.4 ? 1 : 0);
     for (var i = 0; i < up; i++) {
-      var base = [(r() - 0.5) * w * 0.7, -r() * 0.2];
-      var dir = -Math.PI / 2 + (r() - 0.5) * 0.7;
-      var len = 0.62 + r() * 0.5;
+      var side = r() < 0.5 ? -1 : 1;
+      var base = [side * (0.22 + r() * 0.2) * w, -r() * 0.2];
+      var dir = -Math.PI / 2 + side * (0.18 + r() * 0.3);
+      var len = 0.5 + r() * 0.35;
       var pts = stemPts(base, dir, len, (r() - 0.5) * 0.8, 1 + r() * 1.4, r() * 6.28, 30);
       var d0 = 40 + i * 130, dur = 520 + len * 340;
       els.push({ t: "stem", pts: pts, d0: d0, dur: dur });
@@ -182,9 +183,10 @@
       canvas.height = Math.round(H * dpr);
       canvas.style.width = W + "px";
       canvas.style.height = H + "px";
+      canvas.style.top = "0px";
       letters = [];
       var lh = S * 1.16;
-      var firstBase = H / 2 - ((lines.length - 1) * lh) / 2 + S * 0.32;
+      var firstBase = H / 2 - ((lines.length - 1) * lh) / 2 + S * 0.34;
       var id = 1;
       lines.forEach(function (ln, li) {
         var units = 0, i;
@@ -246,6 +248,7 @@
               drawLeaf(g, l.x + e.x * S + jx, l.y + e.y * S + jy, e.a, e.L * S * fade, e.bend, C.stem, C.bg);
             } else if (e.t === "rose") {
               if (layerId !== 1) continue;
+              if (l.id % 3 !== 0) continue;
               drawRose(g, l.x + e.x * S + jx, l.y + e.y * S + jy, e.R * S * fade, e.rot, e.seed, clamp((age - e.d0) / 900, 0, 1), C);
             }
           }
